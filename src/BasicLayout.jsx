@@ -24,7 +24,7 @@ export const BasicLayoutProps = {
   disableMobile: PropTypes.bool.def(false),
   mediaQuery: PropTypes.object.def({}),
   handleMediaQuery: PropTypes.func,
-  footerRender: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]).def(undefined),
+  footerRender: PropTypes.func,
 }
 
 const MediaQueryEnum = {
@@ -142,12 +142,21 @@ const BasicLayout = {
               <WrapContent class="ant-pro-basicLayout-content" contentWidth={props.contentWidth}>
                 {children}
               </WrapContent>
-              { footerRender !== false && (
-                <Layout.Footer>
-                  { isFun(footerRender) && footerRender(h) || footerRender }
-                </Layout.Footer>
-                ) || null
-              }
+              <Layout.Footer>
+                { footerRender && (
+                  isFun(footerRender) && footerRender(h) || footerRender
+                ) || (
+                  <GlobalFooter>
+                    <template slot="links">
+                      <a href="https://www.github.com/vueComponent/" target="_self">Github</a>
+                      <a href="https://www.github.com/sendya/" target="_self">@Sendya</a>
+                    </template>
+                    <template slot="copyright">
+                      <a href="https://github.com/vueComponent">vueComponent</a>
+                    </template>
+                  </GlobalFooter>
+                )}
+              </Layout.Footer>
             </Layout>
           </Layout>
         </ContainerQuery>
@@ -158,8 +167,8 @@ const BasicLayout = {
 
 BasicLayout.install = function (Vue) {
   Vue.component(PageHeaderWrapper.name, PageHeaderWrapper)
-  Vue.component('PageContainer', PageHeaderWrapper)
-  Vue.component('ProLayout', BasicLayout)
+  Vue.component('page-container', PageHeaderWrapper)
+  Vue.component('pro-layout', BasicLayout)
 }
 
 export default BasicLayout
